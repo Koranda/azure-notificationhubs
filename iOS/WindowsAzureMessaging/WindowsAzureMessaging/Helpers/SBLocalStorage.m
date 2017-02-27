@@ -83,10 +83,10 @@ static const NSString* storageVersion = @"v1.0.0";
     StoredRegistrationEntry* reg = [[StoredRegistrationEntry alloc] init];
     
     reg.RegistrationName = [SBNotificationHubHelper nameOfRegistration:registration];
-    reg.registrationId = registration.registrationId;
+    reg.RegistrationId = registration.registrationId;
     reg.ETag = registration.ETag;
     
-    [self->_registrations setValue:reg forKey:reg.RegistrationName];
+    [self->_registrations setValue:reg forKey:registrationName];
     
     self->deviceToken = [registration deviceToken];
     
@@ -98,7 +98,7 @@ static const NSString* storageVersion = @"v1.0.0";
     StoredRegistrationEntry* reg = [[StoredRegistrationEntry alloc] init];
     
     reg.RegistrationName = registrationName;
-    reg.registrationId = registrationId;
+    reg.RegistrationId = registrationId;
     reg.ETag = eTag;
     
     [self->_registrations setValue:reg forKey:reg.RegistrationName];
@@ -129,7 +129,7 @@ static const NSString* storageVersion = @"v1.0.0";
     self->deviceToken = [defaults objectForKey:self->_deviceTokenKey];
     
     NSString* version = [defaults objectForKey:self->_versionKey];
-    isRefreshNeeded = version == nil || ![version isEqualToString: storageVersion];
+    isRefreshNeeded = version == nil || ![storageVersion isEqualToString: version];
     if( isRefreshNeeded )
     {
         return;

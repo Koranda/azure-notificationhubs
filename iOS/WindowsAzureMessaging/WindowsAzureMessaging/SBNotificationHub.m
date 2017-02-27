@@ -406,8 +406,9 @@ NSString* const _UserAgentTemplate = @"NOTIFICATIONHUBS/%@(api-origin=IosSdk; os
     {
         for(SBRegistration* reg in registrations)
         {
-            NSString* name = [SBNotificationHubHelper nameOfRegistration:reg];
-            [self deleteRegistrationWithName:name error:&error];
+            //NSString* name = [SBNotificationHubHelper nameOfRegistration:reg];
+            [self deleteRegistrationWithId:reg.registrationId error:&error];
+             
             if(error)
             {
                 break;
@@ -745,6 +746,30 @@ NSString* const _UserAgentTemplate = @"NOTIFICATIONHUBS/%@(api-origin=IosSdk; os
     {
         // don't return error for not-found
         [storageManager deleteWithRegistrationName:name];
+        error = nil;
+    }
+    
+    if(error != nil)
+    {
+        *error = operationError;
+    }
+    
+    return result;
+}
+
+- (BOOL) deleteRegistrationWithId:(NSString*)registrationId error:(NSError**)error
+{
+    NSURL *requestUri = [self composeRegistrationUriWithRegistrationId: registrationId];
+    
+    NSURLResponse* response=nil;
+    NSData* data;
+    NSError* operationError;
+    BOOL result = [self registrationOperationWithRequestUri:requestUri payload:@"" httpMethod:@"DELETE" ETag:@"*" response:&response responseData:&data error:&operationError];
+    
+    if( operationError == nil || [operationError code] == 404 )
+    {
+        //// don't return error for not-found
+        //[storageManager deleteWithRegistrationName:name];
         error = nil;
     }
     
